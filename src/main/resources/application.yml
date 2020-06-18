@@ -1,0 +1,77 @@
+server:
+  port: 8080
+  netty:
+    connection-timeout: 500
+  servlet:
+    context-path: /undertow
+spring:
+  application:
+    name: learn-undertow
+  redis:
+    password: redis_dhome
+    timeout: 5s
+    lettuce:
+      pool:
+        min-idle: 1
+        max-idle: 5
+        max-active: 8
+        max-wait: 2s
+    cluster:
+      nodes: 172.28.19.96:7000,172.28.19.96:7001,172.28.19.98:7000,172.28.19.98:7001,172.28.19.107:7000,172.28.19.107:7001
+
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://172.28.22.40:8066/gserver
+    username: mycat
+    password: mycat
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      connection-timeout: 60000
+      idle-timeout: 60000
+      max-lifetime: 1800000
+      minimum-idle: 5
+      maximum-pool-size: 10
+      pool-name: ${spring.application.name}
+      dataSourceProperties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+logging:
+  level:
+    root: info
+  file:
+    total-size-cap: 10GB
+    clean-history-on-start: true
+    max-history: 7
+    max-size: 500MB
+    path: /apprun/logs/${spring.application.name}/business
+management:
+  server:
+    port: 8888
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+        step: 5s
+        descriptions: true
+  endpoint:
+    prometheus:
+      enabled: true
+    beans:
+      enabled: true
+    health:
+      enabled: true
+    httptrace:
+      enabled: true
+    info:
+      enabled: true
+    loggers:
+      enabled: true
+    metrics:
+      enabled: true
+    threaddump:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: beans,prometheus,health,httptrace,info,loggers,metrics,threaddump
